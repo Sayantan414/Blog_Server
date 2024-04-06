@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const Port = process.env.port || 5000;
+const Port = process.env.PORT || 5000;
 const app = express();
 
 mongoose.connect("mongodb+srv://dipsadhu111:blogapp@blogapp.tosnqfm.mongodb.net/").then(() => console.log("connected to mongodb"));
