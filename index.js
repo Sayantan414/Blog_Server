@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const Port = process.env.port || 5000;
 const app = express();
 
-mongoose.connect("mongodb://localhost:27017/myapp").then(() => console.log("connected to mongodb"));
+mongoose.connect("mongodb+srv://dipsadhu111:blogapp@blogapp.tosnqfm.mongodb.net/").then(() => console.log("connected to mongodb"));
 
 app.use(express.json());
 const userRoute = require("./routes/user");
