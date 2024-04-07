@@ -10,6 +10,6 @@ const userRoute = require("./routes/user");
 app.use("/user", userRoute);
 
 
-app.route("/").get((req, res) => res.json("Your first rest api"));
+app.route("/").get((req, res) => res.json("Your first rest api is here"));
 
 app.listen(5000, () => console.log(`Server is running on ${Port}`));
