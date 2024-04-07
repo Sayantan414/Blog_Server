@@ -25,6 +25,27 @@ router.get("/:username", middleware.checkToken, async (req, res) => {
     }
 });
 
+router.get("/checkusername/:username", async (req, res) => {
+    try {
+        const username = req.params.username;
+        const user = await User.findOne({ username: username });
+
+        if (user !== null) {
+            return res.json({
+                Status: true
+            });
+        } else {
+            return res.json({
+                Status: false
+            })
+        }
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ msg: "Internal server error" });
+    }
+});
+
 router.post("/login", async (req, res) => {
     try {
         const username = req.body.username;
