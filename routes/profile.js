@@ -69,5 +69,17 @@ router.route("/add").post(middleware.checkToken, (req, res) => {
         });
 });
 
+router.route("/checkProfile").get(middleware.checkToken, (req, res) => {
+    profile.findOne({ username: req.decoded.username }, (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: "Internal Server Error", details: err });
+        }
+        if (!result) {
+            return res.status(404).json({ status: false, message: "Profile not found" });
+        }
+        return res.status(200).json({ status: true, message: "Profile found" });
+    });
+});
+
 
 module.exports = router;
