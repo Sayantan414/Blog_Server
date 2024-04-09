@@ -5,8 +5,7 @@ const config = require("../config");
 const middleware = require('../middleware');
 
 const router = express.Router();
-const jwt = require("jsonwebtoken");
-const middleware = require("../middleware");
+
 
 router.get("/:username", middleware.checkToken, async (req, res) => {
     try {
