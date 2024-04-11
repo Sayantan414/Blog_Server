@@ -69,17 +69,50 @@ router.route("/add").post(middleware.checkToken, (req, res) => {
         });
 });
 
-router.route("/checkProfile").get(middleware.checkToken, (req, res) => {
-    profile.findOne({ username: req.decoded.username }, (err, result) => {
-        if (err) {
-            return res.status(500).json({ error: "Internal Server Error", details: err });
-        }
+router.route("/checkProfile").get(middleware.checkToken, async (req, res) => {
+    try {
+        const result = await Profile.findOne({ username: req.decoded.username });
         if (!result) {
             return res.status(404).json({ status: false, message: "Profile not found" });
         }
         return res.status(200).json({ status: true, message: "Profile found" });
-    });
+    } catch (err) {
+        return res.status(500).json({ error: "Internal Server Error", details: err });
+    }
 });
+
+
+router.route("/getData").get(middleware.checkToken, async (req, res) => {
+    try {
+        const result = await Profile.findOne({ username: req.decoded.username });
+        if (!result) {
+            return res.status(404).json({ data: null });
+        }
+        return res.status(200).json({ data: result });
+    } catch (err) {
+        return res.status(500).json({ error: "Internal Server Error", details: err });
+    }
+});
+
+
+router.route("/update").patch(middleware.checkToken, async (req, res) => {
+    try {
+        let profile = await Profile.findOne({ username: req.decoded.username });
+        if (!profile) {
+            return res.json({ data: [] });
+        }
+        profile.name = req.body.name || profile.name;
+        profile.profession = req.body.profession || profile.profession;
+        profile.DOB = req.body.DOB || profile.DOB;
+        profile.titleline = req.body.titleline || profile.titleline;
+        profile.about = req.body.about || profile.about;
+        const updatedProfile = await profile.save();
+        return res.json({ data: updatedProfile });
+    } catch (err) {
+        return res.json({ err: err });
+    }
+});
+
 
 
 module.exports = router;
