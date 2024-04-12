@@ -11,6 +11,8 @@ const userRoute = require("./routes/user");
 app.use("/user", userRoute);
 const profileRoute = require("./routes/profile");
 app.use("/profile", profileRoute);
+const blogpostRoute = require("./routes/blogpost");
+app.use("/blogpost", blogpostRoute);
 
 
 app.route("/").get((req, res) => res.json("Your first rest api is here"));
