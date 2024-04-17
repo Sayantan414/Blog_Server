@@ -67,7 +67,7 @@ router.route("/Add").post(middleware.checkToken, (req, res) => {
 router.route("/getOwnBlog").get(middleware.checkToken, async (req, res) => {
     try {
         const result = await BlogPost.find({ username: req.decoded.username });
-        return res.json({ data: result });
+        return res.json(result);
     } catch (err) {
         console.error(err);
         return res.status(500).json({ error: err.message });
@@ -77,7 +77,7 @@ router.route("/getOwnBlog").get(middleware.checkToken, async (req, res) => {
 router.route("/getOtherBlog").get(middleware.checkToken, async (req, res) => {
     try {
         const result = await BlogPost.find({ username: { $ne: req.decoded.username } });
-        return res.json({ data: result });
+        return res.json(result);
     } catch (err) {
         console.error(err);
         return res.status(500).json({ error: err.message });
