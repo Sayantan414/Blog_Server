@@ -69,6 +69,31 @@ router.route("/add").post(middleware.checkToken, (req, res) => {
         });
 });
 
+router.route("/update/:id").put(middleware.checkToken, (req, res) => {
+    const id = req.params.id;
+
+    const updateData = {
+        name: req.body.name,
+        profession: req.body.profession,
+        DOB: req.body.DOB,
+        titleline: req.body.titleline,
+        about: req.body.about
+    };
+
+    Profile.findByIdAndUpdate(id, updateData, { new: true })
+        .then((updatedProfile) => {
+            if (!updatedProfile) {
+                return res.status(404).json({ error: "Profile not found" });
+            }
+            res.json({ msg: "Profile successfully updated", data: updatedProfile });
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: err.message });
+        });
+});
+
+
 router.route("/checkProfile").get(middleware.checkToken, async (req, res) => {
     try {
         const result = await Profile.findOne({ username: req.decoded.username });

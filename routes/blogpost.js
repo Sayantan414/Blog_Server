@@ -64,6 +64,27 @@ router.route("/Add").post(middleware.checkToken, (req, res) => {
         });
 });
 
+router.route("/update/:id").put(middleware.checkToken, (req, res) => {
+    const id = req.params.id;
+    const updateData = {
+        title: req.body.title,
+        body: req.body.body,
+    };
+
+    BlogPost.findByIdAndUpdate(id, updateData, { new: true })
+        .then((updatedBlogPost) => {
+            if (!updatedBlogPost) {
+                return res.status(404).json({ error: "Blog post not found" });
+            }
+            res.json({ data: updatedBlogPost });
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: err.message });
+        });
+});
+
+
 router.route("/getOwnBlog").get(middleware.checkToken, async (req, res) => {
     try {
         const result = await BlogPost.find({ username: req.decoded.username });
