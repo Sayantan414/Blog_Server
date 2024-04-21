@@ -69,6 +69,7 @@ router.route("/add").post(middleware.checkToken, (req, res) => {
         });
 });
 
+
 router.route("/update/:id").put(middleware.checkToken, (req, res) => {
     const id = req.params.id;
 
