@@ -74,23 +74,32 @@ router.post("/login", async (req, res) => {
 
 
 router.route("/register").post((req, res) => {
-    console.log("inside the register");
+    const { username, password, email, dp } = req.body;
+
     const user = new User({
-        username: req.body.username,
-        password: req.body.password,
-        email: req.body.email,
-        dp: req.body.dp
+        username: username,
+        password: password,
+        email: email,
+        dp: dp
     });
-    user
-        .save()
+
+    user.save()
         .then(() => {
-            console.log("user registered");
-            res.status(200).json("ok");
+            // Generate token
+            const token = jwt.sign({ username: username }, config.key, {
+                expiresIn: "24h"
+            });
+            res.status(200).json({
+                username: username,
+                dp: dp,
+                token: token
+            });
         })
         .catch((err) => {
             res.status(403).json({ msg: err });
         });
 });
+
 
 router.patch("/update/:username", middleware.checkToken, async (req, res) => {
     try {
