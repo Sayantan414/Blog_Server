@@ -62,7 +62,7 @@ router.post("/login", async (req, res) => {
             let token = jwt.sign({ username: req.body.username }, config.key, {
                 expiresIn: "24h"
             })
-            return res.json({ token: token, msg: "success" });
+            return res.json({ token: token, msg: "success", username: user.username, dp: user.dp });
         } else {
             return res.status(403).json("Password is incorrect");
         }
@@ -78,7 +78,8 @@ router.route("/register").post((req, res) => {
     const user = new User({
         username: req.body.username,
         password: req.body.password,
-        email: req.body.email
+        email: req.body.email,
+        dp: req.body.dp
     });
     user
         .save()
@@ -94,11 +95,12 @@ router.route("/register").post((req, res) => {
 router.patch("/update/:username", middleware.checkToken, async (req, res) => {
     try {
         const username = req.params.username;
-        const newPassword = req.body.password;
+        const updateFields = req.body;
 
         const user = await User.findOneAndUpdate(
             { username: username },
-            { $set: { password: newPassword } }
+            { $set: updateFields },
+            { new: true } // To return the updated document
         );
 
         if (!user) {
@@ -106,14 +108,15 @@ router.patch("/update/:username", middleware.checkToken, async (req, res) => {
         }
 
         return res.json({
-            msg: "Password successfully updated",
-            username: username,
+            msg: "User information successfully updated",
+            user: user,
         });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ msg: "Internal server error" });
     }
 });
+
 
 router.delete("/delete/:username", middleware.checkToken, async (req, res) => {
     try {
