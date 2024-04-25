@@ -100,8 +100,7 @@ router.route("/update/:id").put(middleware.checkToken, (req, res) => {
 
 router.route("/getOwnBlog").get(middleware.checkToken, async (req, res) => {
     try {
-        const result = await BlogPost.find({ username: req.decoded.username })
-            .populate('user', 'dp');
+        const result = await BlogPost.find({ username: req.decoded.username });
         return res.json(result);
     } catch (err) {
         console.error(err);
