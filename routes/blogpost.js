@@ -4,6 +4,8 @@ const BlogPost = require("../models/blogpost.model");
 const middleware = require("../middleware");
 const multer = require("multer");
 const path = require("path");
+const User = require("../models/users.models");
+
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -48,9 +50,17 @@ router.route("/add/coverImage/:id").patch(middleware.checkToken, upload.single("
     }
 })
 
-router.route("/Add").post(middleware.checkToken, (req, res) => {
+router.route("/Add").post(middleware.checkToken, async (req, res) => {
+
+    const user = await User.findOne({ username: req.decoded.username });
+
+    if (!user) {
+        return res.status(404).json({ error: "User not found" });
+    }
+
     const blogpost = new BlogPost({
-        username: req.decoded.username,
+        username: user.username,
+        dp: user.dp,
         title: req.body.title,
         body: req.body.body,
     });
@@ -64,6 +74,8 @@ router.route("/Add").post(middleware.checkToken, (req, res) => {
             res.status(500).json({ error: err.message });
         });
 });
+
+
 
 router.route("/update/:id").put(middleware.checkToken, (req, res) => {
     const id = req.params.id;
@@ -88,7 +100,8 @@ router.route("/update/:id").put(middleware.checkToken, (req, res) => {
 
 router.route("/getOwnBlog").get(middleware.checkToken, async (req, res) => {
     try {
-        const result = await BlogPost.find({ username: req.decoded.username });
+        const result = await BlogPost.find({ username: req.decoded.username })
+            .populate('user', 'dp');
         return res.json(result);
     } catch (err) {
         console.error(err);
