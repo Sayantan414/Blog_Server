@@ -120,6 +120,24 @@ router.route("/getData").get(middleware.checkToken, async (req, res) => {
     }
 });
 
+router.get("/:username", middleware.checkToken, async (req, res) => {
+    try {
+        const username = req.params.username;
+        const profile = await Profile.findOne({ username: username });
+
+        if (!profile) {
+            return res.status(404).json({ msg: "Profile not found" });
+        }
+
+        return res.json({
+            data: profile,
+            username: username
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ msg: "Internal server error" });
+    }
+});
 
 router.route("/update").patch(middleware.checkToken, async (req, res) => {
     try {
