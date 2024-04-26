@@ -52,14 +52,8 @@ router.route("/add/coverImage/:id").patch(middleware.checkToken, upload.single("
 
 router.route("/Add").post(middleware.checkToken, async (req, res) => {
 
-    const user = await User.findOne({ username: req.decoded.username });
-
-    if (!user) {
-        return res.status(404).json({ error: "User not found" });
-    }
-
     const blogpost = new BlogPost({
-        user: user,
+        username: req.decoded.username,
         title: req.body.title,
         body: req.body.body,
     });
