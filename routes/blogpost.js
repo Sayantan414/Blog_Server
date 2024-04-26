@@ -50,8 +50,7 @@ router.route("/add/coverImage/:id").patch(middleware.checkToken, upload.single("
     }
 })
 
-router.route("/Add").post(middleware.checkToken, async (req, res) => {
-
+router.route("/Add").post(middleware.checkToken, (req, res) => {
     const blogpost = new BlogPost({
         username: req.decoded.username,
         title: req.body.title,
