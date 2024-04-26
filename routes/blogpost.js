@@ -60,7 +60,6 @@ router.route("/Add").post(middleware.checkToken, async (req, res) => {
 
     const blogpost = new BlogPost({
         username: user.username,
-        dp: user.dp,
         title: req.body.title,
         body: req.body.body,
     });
