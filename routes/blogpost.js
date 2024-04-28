@@ -68,7 +68,6 @@ router.route("/Add").post(middleware.checkToken, (req, res) => {
 });
 
 
-
 router.route("/update/:id").put(middleware.checkToken, (req, res) => {
     const id = req.params.id;
     const updateData = {
@@ -88,6 +87,34 @@ router.route("/update/:id").put(middleware.checkToken, (req, res) => {
             res.status(500).json({ error: err.message });
         });
 });
+
+router.route("/like/:id").put(middleware.checkToken, async (req, res) => {
+    try {
+        const id = req.params.id;
+        const username = req.decoded.username;
+
+        const blogPost = await BlogPost.findById(id);
+        if (!blogPost) {
+            return res.status(404).json({ error: "Blog post not found" });
+        }
+
+        const hasLiked = blogPost.like.includes(username);
+
+        if (hasLiked) {
+            blogPost.like = blogPost.like.filter(like => like !== username);
+        } else {
+            blogPost.like.push(username);
+        }
+
+        const updatedBlogPost = await blogPost.save();
+
+        res.json({ data: updatedBlogPost });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 
 
 router.route("/getOwnBlog").get(middleware.checkToken, async (req, res) => {

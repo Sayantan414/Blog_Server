@@ -10,8 +10,8 @@ const BlogPost = Schema({
         default: "",
     },
     like: {
-        type: Number,
-        default: 0
+        type: [String],
+        default: [],
     },
     comment: {
         type: Number,
