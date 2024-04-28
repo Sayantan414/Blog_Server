@@ -116,7 +116,6 @@ router.route("/like/:id").put(middleware.checkToken, async (req, res) => {
 });
 
 
-
 router.route("/getOwnBlog").get(middleware.checkToken, async (req, res) => {
     try {
         const result = await BlogPost.find({ username: req.decoded.username });
